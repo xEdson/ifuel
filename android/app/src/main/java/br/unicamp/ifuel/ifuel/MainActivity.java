@@ -1,4 +1,4 @@
-package br.com.nascimento.primeiro_projeto;
+package br.unicamp.ifuel.ifuel;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

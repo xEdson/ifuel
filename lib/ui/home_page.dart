@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:ifuel/helpers/contact_help.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'contact_page.dart';
+import 'abastecimento_page.dart';
 
 enum OrderOption { orderaz, orderza }
 
@@ -67,12 +67,12 @@ class _HomeState extends State<Home> {
           padding: EdgeInsets.all(10.0),
           itemCount: abastecimentos.length,
           itemBuilder: (context, index) {
-            return _contactCard(context, index);
+            return _AbastecimentoCard(context, index);
           }),
     );
   }
 
-  Widget _contactCard(BuildContext context, int index) {
+  Widget _AbastecimentoCard(BuildContext context, int index) {
     return GestureDetector(
       child: Card(
         child: Padding(

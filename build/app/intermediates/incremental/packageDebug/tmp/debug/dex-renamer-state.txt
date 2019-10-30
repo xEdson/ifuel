@@ -1,4 +1,4 @@
-#Tue Oct 15 12:27:34 BRT 2019
+#Wed Oct 30 16:40:41 BRT 2019
 base.0=/home/edsonpn/Android/ifuel/build/app/intermediates/transforms/dexMerger/debug/0
 path.0=classes.dex
 renamed.0=classes.dex

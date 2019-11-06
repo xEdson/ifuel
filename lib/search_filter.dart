@@ -89,7 +89,6 @@ class _SearchFilter extends State<SearchFilter> {
                 _showAbastecimentoPage();
 
               },
-              trailing: _getIcon(0),
             ),
           ],
         ),
@@ -128,6 +127,7 @@ class _SearchFilter extends State<SearchFilter> {
     });
   }
   Future _showAbastecimentoPage() async {
+    Navigator.pop(context);
     final recAbastecimento = await Navigator.push(
         context,
         MaterialPageRoute(

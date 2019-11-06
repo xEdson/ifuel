@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Wed Oct 30 16:40:42 BRT 2019
+#Wed Nov 06 10:42:43 BRST 2019
 4.path=flutter_assets/packages/font_awesome_flutter/lib/fonts/fa-solid-900.ttf
 13.baseType=DIRECTORY
 8.set=ASSET
@@ -9,7 +9,7 @@
 5.baseType=DIRECTORY
 1.base=/home/edsonpn/Android/ifuel/build/app/intermediates/merged_assets/debug/mergeDebugAssets/out
 8.path=flutter_assets/FontManifest.json
-12.path=flutter_assets/AssetManifest.json
+12.path=flutter_assets/fonts/MaterialIcons-Regular.ttf
 3.base=/home/edsonpn/Android/ifuel/build/app/intermediates/merged_assets/debug/mergeDebugAssets/out
 14.path=flutter_assets/kernel_blob.bin
 15.set=ASSET
@@ -39,11 +39,11 @@
 5.path=flutter_assets/vm_snapshot_data
 0.base=/home/edsonpn/Android/ifuel/build/app/intermediates/merged_assets/debug/mergeDebugAssets/out
 7.path=lib/x86_64/libflutter.so
-11.path=flutter_assets/fonts/MaterialIcons-Regular.ttf
+11.path=flutter_assets/packages/font_awesome_flutter/lib/fonts/fa-brands-400.ttf
 9.path=flutter_assets/images/logotipo.jpg
 6.set=NATIVE_RESOURCE
 2.base=/home/edsonpn/Android/ifuel/build/app/intermediates/merged_assets/debug/mergeDebugAssets/out
-13.path=flutter_assets/packages/font_awesome_flutter/lib/fonts/fa-brands-400.ttf
+13.path=flutter_assets/AssetManifest.json
 11.baseType=DIRECTORY
 4.base=/home/edsonpn/Android/ifuel/build/app/intermediates/merged_assets/debug/mergeDebugAssets/out
 15.path=flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf

@@ -12,6 +12,15 @@ final String litrosColumn = "litrosColumn";
 final String valorCombustivelColumn = "valorCombustivelColumn";
 final String totalColumn = "totalColumn";
 
+
+
+final String anoColumn = "ano";
+final String combustivelColumn = "combustivel";
+final String marcaColumn = "marca";
+final String modeloColumn = "modelo";
+final String tipoColumn = "carro";
+
+
 class ContactHelper {
   static final ContactHelper _instance = ContactHelper.internal();
 
@@ -184,4 +193,35 @@ class Abastecimento {
   String toString() {
     return "Abastecimento(id: $id, Litros: $litros, Valor Combustivel: $valorComustivel, Valor Total: $valorTotal)";
   }
+}
+
+class Veiculo {
+  String nome;
+  String marca;
+  String modelo;
+  String ano;
+  String categoria;
+  String combustivel;
+
+  Veiculo();
+
+  Veiculo.fromMap(Map map) {
+    marca = map[marcaColumn];
+    ano = map[anoColumn];
+    categoria = map[tipoColumn];
+    combustivel = map[combustivelColumn];
+    modelo = map[modeloColumn];
+  }
+
+  Map toMap() {
+    Map<String, dynamic> map = {
+      marcaColumn: marca,
+      anoColumn: ano,
+      tipoColumn: categoria,
+      combustivelColumn: combustivel,
+      modeloColumn: modelo,
+    };
+    return map;
+  }
+
 }

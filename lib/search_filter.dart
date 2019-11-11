@@ -29,6 +29,7 @@
  */
 import "package:flutter/material.dart";
 import 'package:ifuel/ui/home_page.dart';
+import 'package:ifuel/ui/veiculos_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchFilter extends StatefulWidget {
@@ -44,7 +45,8 @@ class SearchFilter extends StatefulWidget {
 
 class _SearchFilter extends State<SearchFilter> {
   static final List<String> filterOptions = <String>[
-    "Cadastrar Abastecimento"
+    "Cadastrar Abastecimento",
+    "Cadastrar Veículo"
   ];
 
   static const String _KEY_SELECTED_POSITION = "position";
@@ -90,6 +92,15 @@ class _SearchFilter extends State<SearchFilter> {
 
               },
             ),
+            ListTile(
+              selected: _selectedPosition == 1,
+              leading: Icon(Icons.directions_car),
+              title: Text(filterOptions[1]),
+              onTap: () {
+                _saveKeywordPreference(1);
+                _showVeiculoPage();
+              },
+            ),
           ],
         ),
       ),
@@ -132,6 +143,13 @@ class _SearchFilter extends State<SearchFilter> {
         context,
         MaterialPageRoute(
             builder: (context) => Home()));
+  }
+  Future _showVeiculoPage() async {
+    Navigator.pop(context);
+    final recVeiculo = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => VeiculoPage()));
   }
 }
 

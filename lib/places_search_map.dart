@@ -30,6 +30,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:location/location.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'data/error.dart';
 import 'data/place_response.dart';
@@ -38,6 +39,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
+import 'helpers/contact_help.dart';
+import 'models/posto.dart';
 import 'response_maps.dart';
 
 class PlacesSearchMapSample extends StatefulWidget {
@@ -52,6 +55,8 @@ class PlacesSearchMapSample extends StatefulWidget {
 }
 
 class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
+  ContactHelper helper = ContactHelper();
+  List<Posto> postos = <Posto>[];
   static const String _API_KEY = 'AIzaSyCBb1wj-pYLxWDDKU3MCU1sOvavdDWR6Q8';
   double preGasolina = 4.00;
   double preAlcool = 2.79;
@@ -78,13 +83,12 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
     String url =
         '$baseUrl?key=$_API_KEY&location=$latitude,$longitude&radius=1000&keyword=${widget.keyword}';
     print(url);
-//    final response = await http.get(url);
-//    if (response.statusCode == 200) {
-    if (true) {
-      data = responseMock;
+    http.Response response = await http.get(
+        "https://iron-wave-256918.firebaseio.com/-LtQtiSKIuEnLTGnFrIm/.json");
 
-        _handleResponse(data);
-
+    if (response.statusCode == 200) {
+      _handleResponse(json.decode(response.body));
+      _preencherPostos();
     } else {
       throw Exception('An error occurred getting places nearby');
     }
@@ -154,12 +158,22 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          searchNearby(latitude, longitude); // 2
+          searchNearby(latitude, longitude);
+            _openListPost(context);
+
         },
-        label: Text('Places Nearby'), // 3
-        icon: Icon(Icons.place), // 4
+        label: Text('Places Nearby'),
+        icon: Icon(Icons.place),
       ),
     );
+  }
+
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void _handleResponse(data) {
@@ -180,9 +194,9 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
                   places[i].geometry.location.long),
               infoWindow: InfoWindow(
                   title: places[i].name,
-                  snippet:  "Gasolina: $preGasolina, Alcool: $preAlcool"),
+                  snippet: "Gasolina: $preGasolina, Alcool: $preAlcool"),
               onTap: () {
-                _showOptions(context);
+//                _showOptions(context);
               },
             ),
           );
@@ -200,6 +214,15 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
 //    longitude = currentLocation.longitude;
     latitude = -22.562594;
     longitude = -47.4235437;
+      Marker(
+        markerId: MarkerId("Meu Local"),
+        position: LatLng(latitude, longitude),
+        infoWindow: InfoWindow(title: "Localização atual"),
+        onTap: () {
+
+        },
+      );
+
   }
 
   void _showOptions(BuildContext context) {
@@ -309,5 +332,58 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
                 );
               });
         });
+  }
+
+  void _preencherPostos(){
+    if(postos.length>0){
+      postos = helper.getAllPostos() as List<Posto>;
+    }else{
+      for (int i = 0; i < places.length; i++) {
+        var posto = new Posto(
+            places[i].id,
+            places[i].name,
+            "",
+            markers[i].position.latitude,
+            markers[i].position.longitude,
+            0,
+            preAlcool,
+            preGasolina);
+        postos.add(posto);
+        helper.savePosto(posto);
+      }
+    }
+
+  }
+
+  void _openListPost(BuildContext context){
+    setState(() {
+      showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return ListView.builder(
+                itemCount: postos == null ? 0 : postos.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return new GestureDetector(
+                    onTap: (){
+                      var url = "https://www.google.com.br/maps/dir/" +latitude.toString() +"," + longitude.toString() +"/" + postos[index].latitude.toString() + ","+postos[index].longitude.toString()+"/data=!3m1!4b1!4m2!4m1!3e0";
+                      _launchURL(url);
+                    },
+                    child: new Card( //I am the clickable child
+                      child: new Column(
+                        children: <Widget>[
+                          //new Image.network(video[index]),
+                          new Padding(padding: new EdgeInsets.all(3.0)),
+                          new Text(postos[index].nome,
+                            style: new TextStyle(fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),),
+                  );
+                });
+          });
+    });
+
+
   }
 }

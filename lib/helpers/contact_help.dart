@@ -1,8 +1,10 @@
+import 'package:ifuel/models/posto.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 final String contactTable = "contactTable";
 final String abastecTable = "abastecimentoTable";
+final String postTable = "postoTable";
 final String idColumn = "idColumn";
 final String nameColumn = "nameColumn";
 final String emailColumn = "emailColumn";
@@ -49,6 +51,8 @@ class ContactHelper {
           "CREATE TABLE $contactTable($idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $emailColumn TEXT, $phoneColumn TEXT, $imgColumn TEXT)");
       await db.execute(
           "CREATE TABLE $abastecTable($idColumn INTEGER PRIMARY KEY, $litrosColumn TEXT, $valorCombustivelColumn TEXT, $totalColumn TEXT)");
+      await db.execute(
+          "CREATE TABLE $postTable(id INTEGER PRIMARY KEY, nome TEXT , bandeira TEXT, latitude DOUBLE, longitude DOUBLE , nota DOUBLE ,precoGasolina DOUBLE ,precoAlcool DOUBLE)");
     });
   }
 
@@ -61,6 +65,11 @@ class ContactHelper {
     Database dbContact = await db;
     abastecimento.id = await dbContact.insert(abastecTable, abastecimento.toMap());
     return abastecimento;
+  }
+  savePosto(Posto posto) async {
+    Database dbContact = await db;
+    await dbContact.insert(postTable, posto.toMap());
+    return posto;
   }
 
   Future<Contact> getContact(int id) async {
@@ -111,6 +120,16 @@ class ContactHelper {
       listAbastecimento.add(Abastecimento.fromMap(m));
     }
     return listAbastecimento;
+  }
+
+  Future<List> getAllPostos() async {
+    Database dbContact = await db;
+    List listMap = await dbContact.rawQuery("SELECT * FROM $postTable");
+    List<Posto> listPosto = List();
+    for (Map m in listMap) {
+      listPosto.add(Posto.fromMap(m));
+    }
+    return listPosto;
   }
 
 

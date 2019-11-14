@@ -117,6 +117,12 @@ class ContactHelper {
     return await dbContact.update(abastecTable, abastecimento.toMap(),
         where: "$idColumn = ?", whereArgs: [abastecimento.id]);
   }
+  Future<int> updatePosto(Posto posto) async {
+    Database dbContact = await db;
+    return await dbContact.update(postTable, posto.toMap(),
+        where: "id = ?", whereArgs: [posto.id]);
+  }
+
   Future<int> updateVeiculo(Veiculo veiculo) async {
     Database dbContact = await db;
     return await dbContact.update(veiculoTable, veiculo.toMap(),

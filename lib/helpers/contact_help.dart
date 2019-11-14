@@ -1,3 +1,4 @@
+import 'package:ifuel/Entity/Abastecimento.dart';
 import 'package:ifuel/models/posto.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -5,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 final String contactTable = "contactTable";
 final String abastecTable = "abastecimentoTable";
 final String postTable = "postoTable";
+final String veiculoTable = "veiculoTable";
 final String idColumn = "idColumn";
 final String nameColumn = "nameColumn";
 final String emailColumn = "emailColumn";
@@ -21,6 +23,7 @@ final String combustivelColumn = "combustivel";
 final String marcaColumn = "marca";
 final String modeloColumn = "modelo";
 final String tipoColumn = "carro";
+final String nomeColumn = "nome";
 
 
 class ContactHelper {
@@ -53,6 +56,8 @@ class ContactHelper {
           "CREATE TABLE $abastecTable($idColumn INTEGER PRIMARY KEY, $litrosColumn TEXT, $valorCombustivelColumn TEXT, $totalColumn TEXT)");
       await db.execute(
           "CREATE TABLE $postTable(id INTEGER PRIMARY KEY, nome TEXT , bandeira TEXT, latitude DOUBLE, longitude DOUBLE , nota DOUBLE ,precoGasolina DOUBLE ,precoAlcool DOUBLE)");
+      await db.execute(
+          "CREATE TABLE $veiculoTable($idColumn INTEGER PRIMARY KEY, $anoColumn TEXT, $combustivelColumn TEXT, $marcaColumn TEXT, $modeloColumn TEXT, $tipoColumn TEXT, $nomeColumn TEXT)");
     });
   }
 
@@ -70,6 +75,11 @@ class ContactHelper {
     Database dbContact = await db;
     await dbContact.insert(postTable, posto.toMap());
     return posto;
+  }
+  saveVeiculo(Veiculo veiculo) async {
+    Database dbContact = await db;
+    await dbContact.insert(veiculoTable, veiculo.toMap());
+    return veiculo;
   }
 
   Future<Contact> getContact(int id) async {
@@ -91,6 +101,12 @@ class ContactHelper {
         .delete(contactTable, where: "$idColumn = ?", whereArgs: [id]);
   }
 
+  Future<int> deleteVeiculo(int id) async {
+    Database dbContact = await db;
+    return await dbContact
+        .delete(veiculoTable, where: "$idColumn = ?", whereArgs: [id]);
+  }
+
   Future<int> updateContact(Contact contact) async {
     Database dbContact = await db;
     return await dbContact.update(contactTable, contact.toMap(),
@@ -100,6 +116,11 @@ class ContactHelper {
     Database dbContact = await db;
     return await dbContact.update(abastecTable, abastecimento.toMap(),
         where: "$idColumn = ?", whereArgs: [abastecimento.id]);
+  }
+  Future<int> updateVeiculo(Veiculo veiculo) async {
+    Database dbContact = await db;
+    return await dbContact.update(veiculoTable, veiculo.toMap(),
+        where: "$idColumn = ?", whereArgs: [veiculo.id]);
   }
 
   Future<List> getAllContacts() async {
@@ -130,6 +151,16 @@ class ContactHelper {
       listPosto.add(Posto.fromMap(m));
     }
     return listPosto;
+  }
+
+  Future<List> getAllVeiculos() async {
+    Database dbContact = await db;
+    List listMap = await dbContact.rawQuery("SELECT * FROM $veiculoTable");
+    List<Veiculo> listVeiculo = List();
+    for (Map m in listMap) {
+      listVeiculo.add(Veiculo.fromMap(m));
+    }
+    return listVeiculo;
   }
 
 
@@ -215,6 +246,7 @@ class Abastecimento {
 }
 
 class Veiculo {
+  int id;
   String nome;
   String marca;
   String modelo;
@@ -225,20 +257,24 @@ class Veiculo {
   Veiculo();
 
   Veiculo.fromMap(Map map) {
+    id = map[idColumn];
     marca = map[marcaColumn];
     ano = map[anoColumn];
     categoria = map[tipoColumn];
     combustivel = map[combustivelColumn];
     modelo = map[modeloColumn];
+    nome = map[nomeColumn];
   }
 
   Map toMap() {
     Map<String, dynamic> map = {
+      idColumn: id,
       marcaColumn: marca,
       anoColumn: ano,
       tipoColumn: categoria,
       combustivelColumn: combustivel,
       modeloColumn: modelo,
+      nomeColumn: nome
     };
     return map;
   }

@@ -29,6 +29,7 @@
  */
 import "package:flutter/material.dart";
 import 'package:ifuel/ui/home_page.dart';
+import 'package:ifuel/ui/veiculos_home_page.dart';
 import 'package:ifuel/ui/veiculos_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -149,7 +150,7 @@ class _SearchFilter extends State<SearchFilter> {
     final recVeiculo = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => VeiculoPage()));
+            builder: (context) => VeiculosHome()));
   }
 }
 

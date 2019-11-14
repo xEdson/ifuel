@@ -21,6 +21,8 @@ class _VeiculoPageState extends State<VeiculoPage> {
   final _combustivelController = TextEditingController();
   final _modeloController = TextEditingController();
 
+  final _nomeFocus = FocusNode();
+
   bool _userEdited = false;
 
   Veiculo _editedVeiculo;
@@ -41,6 +43,15 @@ class _VeiculoPageState extends State<VeiculoPage> {
     }
   }
 
+  void _insertVeiculo() {
+    _editedVeiculo.nome = _nomeController.text ;
+    _editedVeiculo.marca = _marcaController.text;
+    _editedVeiculo.ano = _anoController.text;
+    _editedVeiculo.categoria = _categoriaController.text;
+    _editedVeiculo.combustivel = _combustivelController.text;
+    _editedVeiculo.modelo = _modeloController.text;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -53,10 +64,11 @@ class _VeiculoPageState extends State<VeiculoPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            if (_editedVeiculo.nome != null /*&& _editedAbastecimento.valorComustivel.isNotEmpty*/) {
+            _insertVeiculo();
+            if (_editedVeiculo.nome != null) {
               Navigator.pop(context, _editedVeiculo);
             } else {
-//              FocusScope.of(context).requestFocus(_litrosFocus);
+              FocusScope.of(context).requestFocus(_nomeFocus);
             }
           },
           child: Icon(Icons.save),

@@ -55,8 +55,18 @@ class PlacesSearchMapSample extends StatefulWidget {
 }
 
 class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
+
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+
+  @override
+  void initState() {
+    super.initState();
+    _getAllPostos();
+  }
+
+
   ContactHelper helper = ContactHelper();
-  List<Posto> postos = <Posto>[];
+  List<Posto> postos = List();
   static const String _API_KEY = 'AIzaSyCBb1wj-pYLxWDDKU3MCU1sOvavdDWR6Q8';
   double preGasolina = 4.00;
   double preAlcool = 2.79;
@@ -74,8 +84,6 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
     tilt: 75.0,
   );
 
-  List<Marker> markers = <Marker>[];
-
   void searchNearby(double latitude, double longitude) async {
     setState(() {
       markers.clear();
@@ -86,9 +94,12 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
     http.Response response = await http.get(
         "https://iron-wave-256918.firebaseio.com/-LtQtiSKIuEnLTGnFrIm/.json");
 
+
+
     if (response.statusCode == 200) {
-      _handleResponse(json.decode(response.body));
-      _preencherPostos();
+     _handleResponse(json.decode(response.body));
+     _preencherPostos();
+      _preencherPostosByBd(postos);
     } else {
       throw Exception('An error occurred getting places nearby');
     }
@@ -150,7 +161,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
                     _controller.complete(controller);
                     _setStyle(controller);
                   },
-                  markers: Set<Marker>.of(markers),
+                  markers: Set<Marker>.of(markers.values),
                 );
               }
           }
@@ -186,25 +197,43 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
       setState(() {
         places = PlaceResponse.parseResults(data['results']);
 
-        for (int i = 0; i < places.length; i++) {
-          markers.add(
-            Marker(
-              markerId: MarkerId(places[i].placeId),
-              position: LatLng(places[i].geometry.location.lat,
-                  places[i].geometry.location.long),
-              infoWindow: InfoWindow(
-                  title: places[i].name,
-                  snippet: "Gasolina: $preGasolina, Alcool: $preAlcool"),
-              onTap: () {
-//                _showOptions(context);
-              },
-            ),
-          );
-        }
       });
     } else {
       print(data);
     }
+  }
+  void _preencherPostosByBd(List<Posto> list) {
+    if (list.isEmpty) {
+      setState(() {
+        error = new Error(errorMessage: "Postos não encontrados");
+      });
+    } else {
+      setState(() {
+
+        for (int i = 0; i < list.length; i++) {
+          addMarker(list[i]);
+        }
+      });
+    }
+  }
+
+  void addMarker(Posto posto) {
+    var markerIdVal = posto.id;
+    final MarkerId markerId = MarkerId(markerIdVal);
+
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: LatLng(
+        posto.latitude,posto.longitude),
+      infoWindow: InfoWindow(title: posto.nome, snippet: markerIdVal),
+      onTap: () {
+        _showOptions(context, markerId);
+      },
+    );
+    setState(() {
+      // adding a new marker to map
+      markers[markerId] = marker;
+    });
   }
 
   Future _setLocation() async {
@@ -225,7 +254,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
 
   }
 
-  void _showOptions(BuildContext context) {
+  void _showOptions(BuildContext context, MarkerId markerId) {
     showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -258,6 +287,16 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
                           style: TextStyle(color: Colors.red, fontSize: 20.0),
                         ),
                         onPressed: () {
+                          var posto;
+                          // ignore: unrelated_type_equality_checks
+                          for(int i = 0; i< postos.length;i++){
+                            if(postos[i].id == markerId.value){
+                              posto = postos[i];
+                              break;
+                            }
+                          }
+                          var url = "https://www.google.com.br/maps/dir/" +latitude.toString() +"," + longitude.toString() +"/" + posto.latitude.toString()+ ","+posto.longitude.toString()+"/data=!3m1!4b1!4m2!4m1!3e0";
+                          _launchURL(url);
                           Navigator.pop(context);
                         },
                       ),
@@ -334,25 +373,32 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
         });
   }
 
-  void _preencherPostos(){
-    if(postos.length>0){
-      postos = helper.getAllPostos() as List<Posto>;
-    }else{
+  void _preencherPostos() async{
+    postos.clear();
       for (int i = 0; i < places.length; i++) {
         var posto = new Posto(
             places[i].id,
             places[i].name,
             "",
-            markers[i].position.latitude,
-            markers[i].position.longitude,
+            places[i].geometry.location.lat,
+            places[i].geometry.location.long,
             0,
             preAlcool,
             preGasolina);
         postos.add(posto);
-        helper.savePosto(posto);
       }
-    }
+      for(int i =0; i<postos.length; i++){
+        await helper.savePosto(postos[i]);
+      }
+  }
 
+
+  void _getAllPostos() async {
+    helper.getAllPostos().then((list) {
+      setState(() {
+        postos = list;
+      });
+    });
   }
 
   void _openListPost(BuildContext context){

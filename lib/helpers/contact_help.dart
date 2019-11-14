@@ -55,7 +55,7 @@ class ContactHelper {
       await db.execute(
           "CREATE TABLE $abastecTable($idColumn INTEGER PRIMARY KEY, $litrosColumn TEXT, $valorCombustivelColumn TEXT, $totalColumn TEXT)");
       await db.execute(
-          "CREATE TABLE $postTable(id INTEGER PRIMARY KEY, nome TEXT , bandeira TEXT, latitude DOUBLE, longitude DOUBLE , nota DOUBLE ,precoGasolina DOUBLE ,precoAlcool DOUBLE)");
+          "CREATE TABLE $postTable(id TEXT PRIMARY KEY, nome TEXT , bandeira TEXT, latitude DOUBLE, longitude DOUBLE , nota DOUBLE ,precoGasolina DOUBLE ,precoAlcool DOUBLE)");
       await db.execute(
           "CREATE TABLE $veiculoTable($idColumn INTEGER PRIMARY KEY, $anoColumn TEXT, $combustivelColumn TEXT, $marcaColumn TEXT, $modeloColumn TEXT, $tipoColumn TEXT, $nomeColumn TEXT)");
     });

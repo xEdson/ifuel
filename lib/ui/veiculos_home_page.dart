@@ -85,9 +85,8 @@ class _VeiculosState extends State<VeiculosHome> {
                 width: 80.0,
                 height: 80.0,
                 decoration: BoxDecoration(
-                    shape: BoxShape.circle,
                     image: DecorationImage(
-                        image: AssetImage("images/logotipo.jpg"),
+                        image: AssetImage("images/carro.png"),
                         fit: BoxFit.cover)),
               ),
               Padding(
@@ -145,18 +144,6 @@ class _VeiculosState extends State<VeiculosHome> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: FlatButton(
-                        child: Text(
-                          "Ligar",
-                          style: TextStyle(color: Colors.red, fontSize: 20.0),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
                     Padding(
                       padding: EdgeInsets.all(10.0),
                       child: FlatButton(

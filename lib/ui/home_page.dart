@@ -135,18 +135,6 @@ class _HomeState extends State<Home> {
                       padding: EdgeInsets.all(10.0),
                       child: FlatButton(
                         child: Text(
-                          "Ligar",
-                          style: TextStyle(color: Colors.red, fontSize: 20.0),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: FlatButton(
-                        child: Text(
                           "Editar",
                           style: TextStyle(color: Colors.red, fontSize: 20.0),
                         ),

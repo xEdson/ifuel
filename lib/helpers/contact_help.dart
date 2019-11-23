@@ -1,9 +1,10 @@
 import 'package:ifuel/Entity/Abastecimento.dart';
+import 'package:ifuel/Entity/Usuario.dart';
 import 'package:ifuel/models/posto.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-final String contactTable = "contactTable";
+final String usuarioTable = "usuarioTable";
 final String abastecTable = "abastecimentoTable";
 final String postTable = "postoTable";
 final String veiculoTable = "veiculoTable";
@@ -51,9 +52,9 @@ class ContactHelper {
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int newerVersion) async {
       await db.execute(
-          "CREATE TABLE $contactTable($idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $emailColumn TEXT, $phoneColumn TEXT, $imgColumn TEXT)");
+          "CREATE TABLE $usuarioTable(login TEXT PRIMARY KEY, nome TEXT, senha INTEGER, nivel INTEGER)");
       await db.execute(
-          "CREATE TABLE $abastecTable($idColumn INTEGER PRIMARY KEY, $litrosColumn TEXT, $valorCombustivelColumn TEXT, $totalColumn TEXT)");
+          "CREATE TABLE $abastecTable(idColumn INTEGER PRIMARY KEY, litrosColumn TEXT, valorCombustivelColumn TEXT, totalColumn TEXT, usuarioColumn TEXT, veiculoColumn TEXT, postoColumn TEXT, tipoCombustivelColum TEXT)");
       await db.execute(
           "CREATE TABLE $postTable(id TEXT PRIMARY KEY, nome TEXT , bandeira TEXT, latitude DOUBLE, longitude DOUBLE , nota DOUBLE ,precoGasolina DOUBLE ,precoAlcool DOUBLE)");
       await db.execute(
@@ -61,10 +62,10 @@ class ContactHelper {
     });
   }
 
-  saveContact(Contact contact) async {
+  saveUsuario(Usuario usuario) async {
     Database dbContact = await db;
-    contact.id = await dbContact.insert(contactTable, contact.toMap());
-    return contact;
+    await dbContact.insert(usuarioTable, usuario.toJson());
+    return usuario;
   }
   saveAbastecimento(Abastecimento abastecimento) async {
     Database dbContact = await db;
@@ -82,23 +83,29 @@ class ContactHelper {
     return veiculo;
   }
 
-  Future<Contact> getContact(int id) async {
+  Future<Usuario> getUsuario(String login) async {
     Database dbContact = await db;
-    List<Map> maps = await dbContact.query(contactTable,
-        columns: [idColumn, nameColumn, phoneColumn, imgColumn],
-        where: "$idColumn = ?",
-        whereArgs: [id]);
+    List<Map> maps = await dbContact.query(usuarioTable,
+        columns: ['login', 'nome', 'senha', 'nivel'],
+        where: "login = ?",
+        whereArgs: [login]);
     if (maps.length > 0) {
-      return Contact.fromMap(maps.first);
+      return Usuario.fromJson(maps.first);
     } else {
       return null;
     }
   }
 
-  Future<int> deleteContact(int id) async {
+  Future<int> deleteUsuario(String login) async {
     Database dbContact = await db;
     return await dbContact
-        .delete(contactTable, where: "$idColumn = ?", whereArgs: [id]);
+        .delete(usuarioTable, where: "login = ?", whereArgs: [login]);
+  }
+
+  Future<int> deleteAbastecimento(int id) async {
+    Database dbContact = await db;
+    return await dbContact
+        .delete(abastecTable, where: "$idColumn = ?", whereArgs: [id]);
   }
 
   Future<int> deleteVeiculo(int id) async {
@@ -107,10 +114,10 @@ class ContactHelper {
         .delete(veiculoTable, where: "$idColumn = ?", whereArgs: [id]);
   }
 
-  Future<int> updateContact(Contact contact) async {
+  Future<int> updateUsuario(Usuario usuario) async {
     Database dbContact = await db;
-    return await dbContact.update(contactTable, contact.toMap(),
-        where: "$idColumn = ?", whereArgs: [contact.id]);
+    return await dbContact.update(usuarioTable, usuario.toJson(),
+        where: "login = ?", whereArgs: [usuario.login]);
   }
   Future<int> updateAbastecimento(Abastecimento abastecimento) async {
     Database dbContact = await db;
@@ -129,14 +136,14 @@ class ContactHelper {
         where: "$idColumn = ?", whereArgs: [veiculo.id]);
   }
 
-  Future<List> getAllContacts() async {
+  Future<List> getAllUsuarios() async {
     Database dbContact = await db;
-    List listMap = await dbContact.rawQuery("SELECT * FROM $contactTable");
-    List<Contact> listContact = List();
+    List listMap = await dbContact.rawQuery("SELECT * FROM $usuarioTable");
+    List<Usuario> listUsuarios = List();
     for (Map m in listMap) {
-      listContact.add(Contact.fromMap(m));
+      listUsuarios.add(Usuario.fromJson(m));
     }
-    return listContact;
+    return listUsuarios;
   }
 
   Future<List> getAllAbascetimento() async {
@@ -173,81 +180,12 @@ class ContactHelper {
   getNumber() async {
     Database dbContact = await db;
     return Sqflite.firstIntValue(
-        await dbContact.rawQuery("SELECT COUNT(*) FROM $contactTable"));
+        await dbContact.rawQuery("SELECT COUNT(*) FROM $usuarioTable"));
   }
 
   Future close() async {
     Database dbContact = await db;
     dbContact.close();
-  }
-}
-
-class Contact {
-  int id;
-  String name;
-  String email;
-  String phone;
-  String img;
-
-  Contact();
-
-  Contact.fromMap(Map map) {
-    id = map[idColumn];
-    name = map[nameColumn];
-    email = map[emailColumn];
-    phone = map[phoneColumn];
-    img = map[imgColumn];
-  }
-
-  Map toMap() {
-    Map<String, dynamic> map = {
-      nameColumn: name,
-      emailColumn: email,
-      phoneColumn: phone,
-      imgColumn: img
-    };
-    if (id != null) {
-      map[idColumn] = id;
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return "Contact(id: $id, name: $name, email: $email, phone: $phone, img: $img)";
-  }
-}
-
-class Abastecimento {
-  int id;
-  String litros;
-  String valorComustivel;
-  String valorTotal;
-
-  Abastecimento();
-
-  Abastecimento.fromMap(Map map) {
-    id = map[idColumn];
-    litros = map[litrosColumn];
-    valorComustivel = map[valorCombustivelColumn];
-    valorTotal = map[totalColumn];
-  }
-
-  Map toMap() {
-    Map<String, dynamic> map = {
-      litrosColumn: litros,
-      valorCombustivelColumn: valorComustivel,
-      totalColumn: valorTotal,
-    };
-    if (id != null) {
-      map[idColumn] = id;
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return "Abastecimento(id: $id, Litros: $litros, Valor Combustivel: $valorComustivel, Valor Total: $valorTotal)";
   }
 }
 

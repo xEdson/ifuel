@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1079667722678",
+    "firebase_url": "https://iron-wave-256918.firebaseio.com",
+    "project_id": "iron-wave-256918",
+    "storage_bucket": "iron-wave-256918.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079667722678:android:380796d2a06f12f6141917",
+        "android_client_info": {
+          "package_name": "br.unicamp.ifuel.ifuel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079667722678-13625p6tqu7u6iot9ime163v1kenu6sd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.unicamp.ifuel.ifuel",
+            "certificate_hash": "4fc77de003a7a80baaa15fdc19fb471cec8bba3e"
+          }
+        },
+        {
+          "client_id": "1079667722678-6jkocttap94unmmlc5ecdo71imhk1dut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr68UA6K_u7J-rV6tnG6zbSzkJgqzOGL0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1079667722678-6jkocttap94unmmlc5ecdo71imhk1dut.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -29,6 +29,7 @@
  */
 import "package:flutter/material.dart";
 import 'package:ifuel/ui/home_page.dart';
+import 'package:ifuel/ui/login_page.dart';
 import 'package:ifuel/ui/veiculos_home_page.dart';
 import 'package:ifuel/ui/veiculos_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,9 +46,15 @@ class SearchFilter extends StatefulWidget {
 }
 
 class _SearchFilter extends State<SearchFilter> {
+
+  SharedPreferences preferences;
+
+
   static final List<String> filterOptions = <String>[
+    "Login",
     "Cadastrar Abastecimento",
     "Cadastrar Veículo"
+
   ];
 
   static const String _KEY_SELECTED_POSITION = "position";
@@ -85,21 +92,37 @@ class _SearchFilter extends State<SearchFilter> {
           children: <Widget>[
             ListTile(
               selected: _selectedPosition == 0,
-              leading: Icon(Icons.local_gas_station),
+              leading: Icon(Icons.people),
               title: Text(filterOptions[0]),
               onTap: () {
-                _saveKeywordPreference(0);
-                _showAbastecimentoPage();
+                if(preferences.get("Status")=="logado"){
+                  _popLogin();
+                }else{
+                  _showLoginPage();
+                }
 
               },
             ),
             ListTile(
               selected: _selectedPosition == 1,
-              leading: Icon(Icons.directions_car),
+              leading: Icon(Icons.local_gas_station),
               title: Text(filterOptions[1]),
               onTap: () {
-                _saveKeywordPreference(1);
-                _showVeiculoPage();
+                _showAbastecimentoPage();
+
+              },
+            ),
+            ListTile(
+              selected: _selectedPosition == 2,
+              leading: Icon(Icons.directions_car),
+              title: Text(filterOptions[2]),
+              onTap: () {
+                if(preferences.get("Status")=="logado"){
+                  _showVeiculoPage();
+                }else{
+                  _requestPop();
+                }
+
               },
             ),
           ],
@@ -123,10 +146,7 @@ class _SearchFilter extends State<SearchFilter> {
   }
 
   void _loadPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _selectedPosition = prefs.getInt(_KEY_SELECTED_POSITION) ?? 0;
-    });
+    preferences = await SharedPreferences.getInstance();
   }
 
   void _saveKeywordPreference(int position) async {
@@ -151,6 +171,67 @@ class _SearchFilter extends State<SearchFilter> {
         context,
         MaterialPageRoute(
             builder: (context) => VeiculosHome()));
+  }
+  Future _showLoginPage() async {
+    Navigator.pop(context);
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => LoginPage()));
+  }
+
+  Future<bool> _requestPop() {
+    showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Text("Você não está logado"),
+            content: Text("Deseja Logar?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Sim"),
+                onPressed:(){
+                  Navigator.pop(context);
+                  _showLoginPage();
+                } ,
+              ),
+              FlatButton(
+                child: Text("Não"),
+                onPressed:(){
+                  Navigator.pop(context);
+                } ,
+              ),
+
+            ],
+          );
+        });
+    return Future.value(false);
+  }
+  Future<bool> _popLogin() {
+    showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Text("Você já está logado"),
+            content: Text("Deseja deslogar?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Sim"),
+                onPressed:(){
+                  preferences.remove('Status');
+                  Navigator.pop(context);
+                  _showLoginPage();
+                } ,
+              ),
+              FlatButton(
+                child: Text("Não"),
+                onPressed:(){
+                  Navigator.pop(context);
+                } ,
+              ),
+
+            ],
+          );
+        });
+    return Future.value(false);
   }
 }
 

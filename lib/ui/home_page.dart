@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ifuel/Entity/Abastecimento.dart';
 import 'package:ifuel/helpers/contact_help.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -94,7 +95,7 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Litros: "+abastecimentos[index].litros ?? "",
+                      "Litros: "+abastecimentos[index].litrCombustivel ?? "",
                       style: TextStyle(
                           fontSize: 22.0, fontWeight: FontWeight.bold),
                     ),
@@ -103,7 +104,7 @@ class _HomeState extends State<Home> {
                       style: TextStyle(fontSize: 18.0),
                     ),
                     Text(
-                     "Valor Total: "+ abastecimentos[index].valorTotal ?? "",
+                     "Valor Total: "+ abastecimentos[index].total ?? "",
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ],
@@ -152,7 +153,7 @@ class _HomeState extends State<Home> {
                           style: TextStyle(color: Colors.red, fontSize: 20.0),
                         ),
                         onPressed: () {
-                          helper.deleteContact(abastecimentos[index].id);
+                          helper.deleteAbastecimento(abastecimentos[index].id);
                           setState(() {
                             abastecimentos.removeAt(index);
                             Navigator.pop(context);

@@ -23,6 +23,7 @@ class _AbastecimentoPageState extends State<AbastecimentoPage> {
   final _veiculoController = TextEditingController();
   final _tipoCombustivelController = TextEditingController();
 
+
   final _litrosFocus = FocusNode();
 
   Abastecimento _editedAbastecimento;
@@ -97,17 +98,17 @@ class _AbastecimentoPageState extends State<AbastecimentoPage> {
           padding: EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
-              buildTextField("Litros", "", _litrosController, _litrosChanged),
+              buildTextFieldNumber("Litros", "", _litrosController, _litrosChanged),
               Divider(),
-              buildTextField("Preço Combustivel", "", _valorCombustivelController, _valorChanged),
+              buildTextFieldNumber("Preço Combustivel", "", _valorCombustivelController, _valorChanged),
               Divider(),
-              buildTextField("Total", "", _totalController, _totalChanged),
+              buildTextFieldNumber("Total", "", _totalController, _totalChanged),
               Divider(),
-              buildTextField("Posto", "", _postolController, _totalChanged),
+              DropdownButton(),
               Divider(),
-              buildTextField("Veiculo", "", _veiculoController, _totalChanged),
+              buildTextFieldNumber("Veiculo", "", _veiculoController, _totalChanged),
               Divider(),
-              buildTextField("Total", "", _tipoCombustivelController, _totalChanged),
+              buildTextFieldNumber("Tipo Combustivel", "", _tipoCombustivelController, _totalChanged),
             ],
           ),
         ),
@@ -115,7 +116,7 @@ class _AbastecimentoPageState extends State<AbastecimentoPage> {
     );
   }
 
-  Widget buildTextField(String label, String prefix,
+  Widget buildTextFieldNumber(String label, String prefix,
       TextEditingController controller, Function function) {
     return TextField(
       controller: controller,
@@ -129,6 +130,23 @@ class _AbastecimentoPageState extends State<AbastecimentoPage> {
       style: TextStyle(color: Colors.black, fontSize: 25.0),
       onChanged: function,
       keyboardType: TextInputType.number,
+    );
+  }
+
+  Widget buildTextField(String label, String prefix,
+      TextEditingController controller, Function function) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.black),
+          enabledBorder:
+          OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+          border: OutlineInputBorder(),
+          prefixText: prefix),
+      style: TextStyle(color: Colors.black, fontSize: 25.0),
+      onChanged: function,
+      keyboardType: TextInputType.text,
     );
   }
 }

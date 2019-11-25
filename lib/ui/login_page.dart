@@ -27,7 +27,6 @@ class _LoginPageState extends State<LoginPage> {
 
  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _carregarSession();
   }
@@ -41,20 +40,13 @@ class _LoginPageState extends State<LoginPage> {
           title: Text("Login"),
           centerTitle: true,
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-
-          },
-          child: Icon(Icons.save),
-          backgroundColor: Colors.red,
-        ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
               buildTextField("Login","",_loginController),
               Divider(),
-              buildTextField("Senha", "", _senhaController),
+              buildNumberField("Senha", "", _senhaController),
               Divider(),
               Row(
                 children: <Widget>[
@@ -97,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
   Future logar() async {
 
     if(_loginController.text.isNotEmpty && _senhaController.text.isNotEmpty){
-       logado = await controlaUsuario.login(_loginController.text, int.parse(_senhaController.text));
+       logado = await controlaUsuario.login(_loginController.text, int.parse(_senhaController.text), context);
     }
   }
 
@@ -117,6 +109,22 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget buildNumberField(String label, String prefix,
+      TextEditingController controller) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.black),
+          enabledBorder:
+          OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+          border: OutlineInputBorder(),
+          prefixText: prefix),
+      style: TextStyle(color: Colors.black, fontSize: 25.0),
+      keyboardType: TextInputType.number,
+    );
+  }
+
 
   Future _showCadastro() async {
     final recUsuario = await Navigator.push(
@@ -128,4 +136,6 @@ class _LoginPageState extends State<LoginPage> {
         await helper.saveUsuario(recUsuario);
     }
   }
+
+
 }

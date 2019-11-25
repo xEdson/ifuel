@@ -87,6 +87,7 @@ class _SearchFilter extends State<SearchFilter> {
             },
           ),
           title: Text('Menu'),
+          backgroundColor: Colors.red,
         ),
         body: ListView(
           children: <Widget>[

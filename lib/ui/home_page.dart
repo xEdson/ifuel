@@ -107,6 +107,14 @@ class _HomeState extends State<Home> {
                      "Valor Total: "+ abastecimentos[index].total ?? "",
                       style: TextStyle(fontSize: 18.0),
                     ),
+                    Text(
+                      "Veiculo: "+ abastecimentos[index].veiculo ?? "",
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                    Text(
+                      "Posto: "+ abastecimentos[index].posto ?? "",
+                      style: TextStyle(fontSize: 18.0),
+                    ),
                   ],
                 ),
               )

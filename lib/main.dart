@@ -50,6 +50,7 @@ class _GoogleMapSampleApp extends State<GoogleMapsSampleApp>{
       home: Scaffold(
         appBar: AppBar(
           title: Text('iFuel - Encontre um Posto'),
+          backgroundColor: Colors.red,
           actions: <Widget>[
             Builder(
               builder: (BuildContext context) {
@@ -68,6 +69,4 @@ class _GoogleMapSampleApp extends State<GoogleMapsSampleApp>{
       ),
     );
   }
-
-
 }

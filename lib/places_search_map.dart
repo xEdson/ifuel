@@ -165,6 +165,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
           },
         ),
         floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Colors.red,
           onPressed: () {
             searchNearby(latitude, longitude);
           },

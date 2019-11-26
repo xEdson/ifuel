@@ -29,6 +29,7 @@
  */
 import 'dart:async';
 import 'dart:convert';
+import 'package:ifuel/ui/posto_page.dart';
 import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -263,6 +264,23 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
                       padding: EdgeInsets.all(10.0),
                       child: FlatButton(
                         child: Text(
+                          "Ver Posto!",
+                          style: TextStyle(color: Colors.red, fontSize: 20.0),
+                        ),
+                        onPressed: () {
+                          for(int i =0;i<postos.length;i++){
+                            if(postos[i].id==markerId.value){
+                              _showPostoPage(context, i);
+                              break;
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: FlatButton(
+                        child: Text(
                           "Editar valor!",
                           style: TextStyle(color: Colors.red, fontSize: 20.0),
                         ),
@@ -324,7 +342,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
   }
 
   void filterByGas(BuildContext context) {
-     showModalBottomSheet(
+    showModalBottomSheet(
         context: context,
         builder: (context) {
           return Row(
@@ -471,16 +489,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
                 itemBuilder: (BuildContext context, int index) {
                   return new GestureDetector(
                     onTap: () {
-                      var url = "https://www.google.com.br/maps/dir/" +
-                          latitude.toString() +
-                          "," +
-                          longitude.toString() +
-                          "/" +
-                          postos[index].latitude.toString() +
-                          "," +
-                          postos[index].longitude.toString() +
-                          "/data=!3m1!4b1!4m2!4m1!3e0";
-                      _launchURL(url);
+                      _showPostoPage(context, index);
                     },
                     child: new Card(
                       //I am the clickable child
@@ -501,6 +510,27 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
                 });
           });
     });
+  }
+
+  Future _showPostoPage(BuildContext context, int index) async {
+    final irParaPosto = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PostoPage(
+                  posto: postos[index],
+                )));
+    if (irParaPosto) {
+      var url = "https://www.google.com.br/maps/dir/" +
+          latitude.toString() +
+          "," +
+          longitude.toString() +
+          "/" +
+          postos[index].latitude.toString() +
+          "," +
+          postos[index].longitude.toString() +
+          "/data=!3m1!4b1!4m2!4m1!3e0";
+      _launchURL(url);
+    }
   }
 
   void _orderPosto(int combustivel) {

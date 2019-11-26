@@ -76,6 +76,9 @@ class _AbastecimentoPageState extends State<AbastecimentoPage> {
       _litrosController.text = _editedAbastecimento.litrCombustivel;
       _valorCombustivelController.text = _editedAbastecimento.valorComustivel;
       _totalController.text = _editedAbastecimento.total;
+      _veiculoSelecionado = _editedAbastecimento.veiculo;
+      _postoSelecionado = _editedAbastecimento.posto;
+      _combustivelSelecionado = _editedAbastecimento.tipoCombustivel;
     }
     _getAllPostos();
     _getAllVeiculos();
@@ -133,7 +136,7 @@ class _AbastecimentoPageState extends State<AbastecimentoPage> {
                   isExpanded: true,
                   items: _dropDownCombustiveisItems,
                   onChanged: changedDropDownItem,
-                  style: TextStyle(color: Colors.black, fontSize: 25.0),
+                  style: TextStyle(color: Colors.black, fontSize: 15.0),
                 ),
               ),
               Divider(),

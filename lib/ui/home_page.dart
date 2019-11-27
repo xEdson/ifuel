@@ -41,19 +41,6 @@ class _HomeState extends State<Home> {
               image: AssetImage("images/logotipo.jpg"),
             ),
           ),
-          PopupMenuButton<OrderOption>(
-            itemBuilder: (context) => <PopupMenuEntry<OrderOption>>[
-              const PopupMenuItem<OrderOption>(
-                child: Text("Ordenar A-Z"),
-                value: OrderOption.orderaz,
-              ),
-              const PopupMenuItem<OrderOption>(
-                child: Text("Ordenar Z-A"),
-                value: OrderOption.orderza,
-              ),
-            ],
-            onSelected: _orderList,
-          ),
         ],
       ),
       backgroundColor: Colors.white,

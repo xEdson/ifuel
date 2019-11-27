@@ -197,6 +197,7 @@ class _PostoPageState extends State<PostoPage> {
         media = media / list.length;
         setState(() {
           posto.nota = double.parse(formatter.format(media));
+          media = 0;
         });
       }
     });

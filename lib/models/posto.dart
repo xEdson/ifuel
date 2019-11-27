@@ -55,15 +55,16 @@ class Posto{
     _precoAlcool = value;
   }
 
-  Posto.fromMap(Map map) {
-    id = map['id'];
-    nome = map['nome'];
-    bandeira = map['bandeira'];
-    latitude = map['latitude'];
-    longitude = map['longitude'];
-    nota = map['nota'];
-    precoAlcool = map['precoAlcool'];
-    precoGasolina = map['precoGasolina'];
+
+  Posto.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    nome = json['nome'];
+    bandeira = json['bandeira'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    nota = json['nota'];
+    precoAlcool = json['precoAlcool'];
+    precoGasolina = json['precoGasolina'];
   }
 
   Map toMap() {

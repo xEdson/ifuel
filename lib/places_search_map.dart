@@ -90,8 +90,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
     String url =
         '$baseUrl?key=$_API_KEY&location=$latitude,$longitude&radius=1000&keyword=${widget.keyword}';
     print(url);
-    http.Response response = await http.get(
-        "https://iron-wave-256918.firebaseio.com/-LtQtiSKIuEnLTGnFrIm/.json");
+    http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
       _handleResponse(json.decode(response.body));
@@ -236,10 +235,10 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
   Future _setLocation() async {
     var location = new Location();
     var currentLocation = await location.getLocation();
-//    latitude = currentLocation.latitude;
-//    longitude = currentLocation.longitude;
-    latitude = -22.562594;
-    longitude = -47.4235437;
+    latitude = currentLocation.latitude;
+    longitude = currentLocation.longitude;
+//    latitude = -22.562594;
+//    longitude = -47.4235437;
     Marker(
       markerId: MarkerId("Meu Local"),
       position: LatLng(latitude, longitude),

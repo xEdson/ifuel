@@ -1,10 +1,12 @@
 import 'package:ifuel/Entity/Abastecimento.dart';
+import 'package:ifuel/Entity/Nota.dart';
 import 'package:ifuel/Entity/Usuario.dart';
 import 'package:ifuel/models/posto.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 final String usuarioTable = "usuarioTable";
+final String notasTable = "notaTable";
 final String abastecTable = "abastecimentoTable";
 final String postTable = "postoTable";
 final String veiculoTable = "veiculoTable";
@@ -54,6 +56,8 @@ class ContactHelper {
       await db.execute(
           "CREATE TABLE $usuarioTable(login TEXT PRIMARY KEY, nome TEXT, senha INTEGER, nivel INTEGER)");
       await db.execute(
+          "CREATE TABLE $notasTable(id int PRIMARY KEY, idPosto TEXT, nota DOUBLE)");
+      await db.execute(
           "CREATE TABLE $abastecTable(idColumn INTEGER PRIMARY KEY, litrosColumn TEXT, valorCombustivelColumn TEXT, totalColumn TEXT, usuarioColumn TEXT, veiculoColumn TEXT, postoColumn TEXT, tipoCombustivelColum TEXT)");
       await db.execute(
           "CREATE TABLE $postTable(id TEXT PRIMARY KEY, nome TEXT , bandeira TEXT, latitude DOUBLE, longitude DOUBLE , nota DOUBLE ,precoGasolina DOUBLE ,precoAlcool DOUBLE, tipoCombustivel TEXT)");
@@ -77,6 +81,13 @@ class ContactHelper {
     await dbContact.insert(postTable, posto.toMap());
     return posto;
   }
+
+  saveNota(Nota nota) async {
+    Database dbContact = await db;
+    nota.id = await dbContact.insert(notasTable, nota.toMap());
+    return nota;
+  }
+
   saveVeiculo(Veiculo veiculo) async {
     Database dbContact = await db;
     await dbContact.insert(veiculoTable, veiculo.toMap());
@@ -161,7 +172,7 @@ class ContactHelper {
     List listMap = await dbContact.rawQuery("SELECT * FROM $postTable");
     List<Posto> listPosto = List();
     for (Map m in listMap) {
-      listPosto.add(Posto.fromMap(m));
+      listPosto.add(Posto.fromJson(m));
     }
     return listPosto;
   }
@@ -174,6 +185,19 @@ class ContactHelper {
       listVeiculo.add(Veiculo.fromMap(m));
     }
     return listVeiculo;
+  }
+
+  Future<List> getNota(String idPosto) async {
+    Database dbContact = await db;
+    List<Nota> listNotas = List();
+    List<Map> maps = await dbContact.query(notasTable,
+        columns: ['id', 'idPosto', 'nota'],
+        where: "idPosto = ?",
+        whereArgs: [idPosto]);
+    for (Map m in maps) {
+      listNotas.add(Nota.fromMap(m));
+    }
+    return listNotas;
   }
 
 

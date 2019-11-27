@@ -101,13 +101,27 @@ class _PostoPageState extends State<PostoPage> {
                     color: Colors.black,
                     fontSize: 20.0,
                   )),
-              _buildRow()
+              _buildRow(),
+              Divider(),
+              Text("Combustivel com melhor custo benefício nesse posto: ${calcularCombustivel()} ")
             ],
           ),
         ),
       ),
     );
   }
+
+  String calcularCombustivel(){
+
+    var divisao = posto.precoAlcool/posto.precoGasolina;
+
+    if(divisao<=0.7){
+      return "Alcool";
+    }else{
+      return "Gasolina";
+    }
+  }
+
 
   Row _buildRow() {
     var colorBlack = Colors.black;

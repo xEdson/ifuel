@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ifuel/helpers/contact_help.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:toast/toast.dart';
 
 class VeiculoPage extends StatefulWidget {
   final Veiculo veiculo;
@@ -21,6 +22,10 @@ class _VeiculoPageState extends State<VeiculoPage> {
   final _combustivelController = TextEditingController();
   final _modeloController = TextEditingController();
 
+  String _combustivelSelecionado;
+  List<DropdownMenuItem<String>> _dropDownCombustiveisItems;
+  List _combustiveis = ["Alcool", "Gasolina", "Diesel", "GNV", "Gasolina Aditivada"];
+
   final _nomeFocus = FocusNode();
 
   bool _userEdited = false;
@@ -29,6 +34,8 @@ class _VeiculoPageState extends State<VeiculoPage> {
 
   @override
   void initState() {
+    _dropDownCombustiveisItems = getDropDownCombustiveisItems();
+    _combustivelSelecionado = _dropDownCombustiveisItems[0].value;
     super.initState();
     if (widget.veiculo == null) {
       _editedVeiculo = Veiculo();
@@ -48,7 +55,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
     _editedVeiculo.marca = _marcaController.text;
     _editedVeiculo.ano = _anoController.text;
     _editedVeiculo.categoria = _categoriaController.text;
-    _editedVeiculo.combustivel = _combustivelController.text;
+    _editedVeiculo.combustivel = _combustivelSelecionado;
     _editedVeiculo.modelo = _modeloController.text;
   }
 
@@ -65,10 +72,16 @@ class _VeiculoPageState extends State<VeiculoPage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             _insertVeiculo();
-            if (_editedVeiculo.nome != null) {
-              Navigator.pop(context, _editedVeiculo);
-            } else {
+            if (_editedVeiculo.nome == ""
+                || _editedVeiculo.ano == ""
+                || _editedVeiculo.modelo == ""
+                || _editedVeiculo.categoria == ""
+                || _editedVeiculo.combustivel == ""
+                || _editedVeiculo.marca == "") {
               FocusScope.of(context).requestFocus(_nomeFocus);
+              Toast.show("Existem campos em branco", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+            } else {
+              Navigator.pop(context, _editedVeiculo);
             }
           },
           child: Icon(Icons.save),
@@ -88,7 +101,21 @@ class _VeiculoPageState extends State<VeiculoPage> {
               Divider(),
               buildTextField("Categoria", "", _categoriaController),
               Divider(),
-              buildTextField("Combustível", "", _combustivelController),
+              new Text("Selecione um tipo de combustível"),
+              Container(
+                width: 400.0,
+                height: 60.0,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7.0),
+                    border: Border.all(color: Colors.blueGrey)),
+                child: DropdownButton(
+                  value: _combustivelSelecionado,
+                  isExpanded: true,
+                  items: _dropDownCombustiveisItems,
+                  onChanged: changedDropDownItem,
+                  style: TextStyle(color: Colors.black, fontSize: 25.0),
+                ),
+              ),
             ],
           ),
         ),
@@ -141,5 +168,22 @@ class _VeiculoPageState extends State<VeiculoPage> {
       style: TextStyle(color: Colors.black, fontSize: 25.0),
       keyboardType: TextInputType.text,
     );
+  }
+
+  void changedDropDownItem(String combustivelSelecionado) {
+    setState(() {
+      _combustivelSelecionado = combustivelSelecionado;
+    });
+  }
+
+  List<DropdownMenuItem<String>> getDropDownCombustiveisItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String c in _combustiveis) {
+      items.add(new DropdownMenuItem(
+          value: c,
+          child: new Text(c)
+      ));
+    }
+    return items;
   }
 }

@@ -72,12 +72,12 @@ class _VeiculoPageState extends State<VeiculoPage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             _insertVeiculo();
-            if (_editedVeiculo.nome == ""
-                || _editedVeiculo.ano == ""
-                || _editedVeiculo.modelo == ""
-                || _editedVeiculo.categoria == ""
-                || _editedVeiculo.combustivel == ""
-                || _editedVeiculo.marca == "") {
+            if (_editedVeiculo.nome.length == 0
+                || _editedVeiculo.ano.length == 0
+                || _editedVeiculo.modelo.length == 0
+                || _editedVeiculo.categoria.length == 0
+                || _editedVeiculo.combustivel.length == 0
+                || _editedVeiculo.marca.length == 0) {
               FocusScope.of(context).requestFocus(_nomeFocus);
               Toast.show("Existem campos em branco", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
             } else {

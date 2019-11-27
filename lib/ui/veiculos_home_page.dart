@@ -101,23 +101,23 @@ class _VeiculosState extends State<VeiculosHome> {
                     ),
                     Text(
                       "Marca: "+veiculos[index].marca ?? "",
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                     Text(
                      "Categoria: "+ veiculos[index].categoria ?? "",
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                     Text(
                       "Modelo: "+ veiculos[index].modelo ?? "",
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                     Text(
                       "Ano: "+ veiculos[index].ano ?? "",
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                     Text(
                       "Combustível: "+ veiculos[index].combustivel ?? "",
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 15.0),
                     ),
                   ],
                 ),
